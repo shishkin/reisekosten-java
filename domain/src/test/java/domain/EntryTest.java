@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -28,7 +27,7 @@ public class EntryTest {
         var destination = "any";
         var reason = "any";
 
-        assertThrows(TravelEndMustOccurBeforeStart.class ,() -> enter(start, end, destination, reason));
+        assertThrows(TravelEndMustOccurBeforeStart.class, () -> enter(start, end, destination, reason));
     }
 
     @Test
@@ -39,24 +38,35 @@ public class EntryTest {
         var reason = "any";
 
         enter(start, end, destination, reason);
-        assertThrows(OnlyOneSimultaneousTravelAllowed.class ,() -> enter(start, end, destination, reason));
+        assertThrows(OnlyOneSimultaneousTravelAllowed.class, () -> enter(start, end, destination, reason));
     }
+
+    final Accounting accounting = new Accounting();
 
     public record Travel(LocalDateTime start, LocalDateTime end) {
     }
 
-    static List<Travel> bookkeeping = new ArrayList<>();
+    public static class Accounting extends ArrayList<Travel> {
+    }
 
-    public static void enter(LocalDateTime start, LocalDateTime end, String destination, String reason) throws TravelEndMustOccurBeforeStart, OnlyOneSimultaneousTravelAllowed {
+    public void enter(LocalDateTime start, LocalDateTime end, String destination, String reason) throws TravelEndMustOccurBeforeStart, OnlyOneSimultaneousTravelAllowed {
         if (end.compareTo(start) < 0) {
             throw new TravelEndMustOccurBeforeStart();
         }
 
-        if (bookkeeping.stream().anyMatch((travel) -> travel.start.compareTo(start) <= 0 && travel.end.compareTo(end) >= 0)) {
+        enterInAccounting(accounting, start, end);
+    }
+
+    public void enterInAccounting(Accounting accounting, LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
+        travelsMustNotOverlap(accounting, start, end);
+
+        accounting.add(new Travel(start, end));
+    }
+
+    public void travelsMustNotOverlap(Accounting accounting, LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
+        if (accounting.stream().anyMatch((travel) -> travel.start.compareTo(start) <= 0 && travel.end.compareTo(end) >= 0)) {
             throw new OnlyOneSimultaneousTravelAllowed();
         }
-
-        bookkeeping.add(new Travel(start, end));
     }
 
     public static class TravelEndMustOccurBeforeStart extends Exception {
