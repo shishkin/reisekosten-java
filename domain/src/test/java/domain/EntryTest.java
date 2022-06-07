@@ -1,6 +1,7 @@
 package domain;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,13 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EntryTest {
+
+    Accounting accounting = new Accounting();
+
+    @BeforeEach
+    void setup(){
+        accounting = new Accounting();
+    }
 
     @Test
     void Should_accept_travel_with_start_end_destination_and_reason() throws Exception {
@@ -39,8 +47,6 @@ public class EntryTest {
         enter(start, end, destination, reason);
         assertThrows(OnlyOneSimultaneousTravelAllowed.class, () -> enter(start, end, destination, reason));
     }
-
-    final Accounting accounting = new Accounting();
 
     public void enter(LocalDateTime start, LocalDateTime end, String destination, String reason) throws TravelEndMustOccurBeforeStart, OnlyOneSimultaneousTravelAllowed {
         if (end.compareTo(start) < 0) {
