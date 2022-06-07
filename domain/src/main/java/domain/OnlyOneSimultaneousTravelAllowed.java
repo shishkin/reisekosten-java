@@ -1,4 +1,4 @@
 package domain;
 
-public class OnlyOneSimultaneousTravelAllowed extends Exception {
+public class OnlyOneSimultaneousTravelAllowed extends RuntimeException {
 }

@@ -10,7 +10,7 @@ public class Accounting implements Iterable<Travel> {
 
     final List<Travel> accounting = new ArrayList<>();
 
-    public void enterTravel(TravelExpenseForm form, SystemClock clock) throws OnlyOneSimultaneousTravelAllowed, TravelExpenseIsTooLate, TravelEndMustOccurAfterEnd {
+    public void enterTravel(TravelExpenseForm form, SystemClock clock) {
         travelEndMustOccurAfterStart(form.start(), form.end());
         travelMustBeEnteredBeforeJan10FollowingYear(form.end(), clock);
         travelsMustNotOverlap(form.start(), form.end());
@@ -18,20 +18,20 @@ public class Accounting implements Iterable<Travel> {
         accounting.add(new Travel(form));
     }
 
-    private void travelEndMustOccurAfterStart(LocalDateTime start, LocalDateTime end) throws TravelEndMustOccurAfterEnd {
+    private void travelEndMustOccurAfterStart(LocalDateTime start, LocalDateTime end) {
         if (end.compareTo(start) < 0) {
             throw new TravelEndMustOccurAfterEnd();
         }
     }
 
 
-    public void travelsMustNotOverlap(LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
+    public void travelsMustNotOverlap(LocalDateTime start, LocalDateTime end) {
         if (accounting.stream().anyMatch((travel) -> travel.form().start().compareTo(start) <= 0 && travel.form().end().compareTo(end) >= 0)) {
             throw new OnlyOneSimultaneousTravelAllowed();
         }
     }
 
-    public void travelMustBeEnteredBeforeJan10FollowingYear(LocalDateTime end, SystemClock clock) throws TravelExpenseIsTooLate {
+    public void travelMustBeEnteredBeforeJan10FollowingYear(LocalDateTime end, SystemClock clock) {
         var now = clock.now();
         if (end.getYear() == now.getYear() - 1 && now.getMonthValue() >= Month.JANUARY.getValue() && now.getDayOfMonth() > 10) {
             throw new TravelExpenseIsTooLate();

@@ -1,4 +1,4 @@
 package domain;
 
-public class TravelExpenseIsTooLate extends Exception {
+public class TravelExpenseIsTooLate extends RuntimeException {
 }

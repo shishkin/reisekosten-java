@@ -1,4 +1,4 @@
 package domain;
 
-public class TravelEndMustOccurAfterEnd extends Exception {
+public class TravelEndMustOccurAfterEnd extends RuntimeException {
 }
