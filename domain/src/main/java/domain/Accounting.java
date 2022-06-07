@@ -10,12 +10,12 @@ public class Accounting implements Iterable<Travel> {
 
     final List<Travel> accounting = new ArrayList<>();
 
-    public void enterTravel(LocalDateTime start, LocalDateTime end, SystemClock clock) throws OnlyOneSimultaneousTravelAllowed, TravelExpenseIsTooLate, TravelEndMustOccurAfterEnd {
-        travelEndMustOccurAfterStart(start, end);
-        travelMustBeEnteredBeforeJan10FollowingYear(end, clock);
-        travelsMustNotOverlap(start, end);
+    public void enterTravel(TravelExpenseForm form, SystemClock clock) throws OnlyOneSimultaneousTravelAllowed, TravelExpenseIsTooLate, TravelEndMustOccurAfterEnd {
+        travelEndMustOccurAfterStart(form.start(), form.end());
+        travelMustBeEnteredBeforeJan10FollowingYear(form.end(), clock);
+        travelsMustNotOverlap(form.start(), form.end());
 
-        accounting.add(new Travel(start, end));
+        accounting.add(new Travel(form));
     }
 
     private void travelEndMustOccurAfterStart(LocalDateTime start, LocalDateTime end) throws TravelEndMustOccurAfterEnd {
@@ -26,7 +26,7 @@ public class Accounting implements Iterable<Travel> {
 
 
     public void travelsMustNotOverlap(LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
-        if (accounting.stream().anyMatch((travel) -> travel.start().compareTo(start) <= 0 && travel.end().compareTo(end) >= 0)) {
+        if (accounting.stream().anyMatch((travel) -> travel.form().start().compareTo(start) <= 0 && travel.form().end().compareTo(end) >= 0)) {
             throw new OnlyOneSimultaneousTravelAllowed();
         }
     }

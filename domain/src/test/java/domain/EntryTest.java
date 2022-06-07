@@ -77,9 +77,6 @@ public class EntryTest {
     }
 
     public void enter(TravelExpenseForm form, SystemClock clock) throws TravelEndMustOccurAfterEnd, OnlyOneSimultaneousTravelAllowed, TravelExpenseIsTooLate {
-        accounting.enterTravel(form.start(), form.end(), clock);
-    }
-
-    public record TravelExpenseForm(LocalDateTime start, LocalDateTime end, String destination, String reason) {
+        accounting.enterTravel(form, clock);
     }
 }
