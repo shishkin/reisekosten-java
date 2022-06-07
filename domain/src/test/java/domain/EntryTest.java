@@ -28,7 +28,7 @@ public class EntryTest {
         var destination = "any";
         var reason = "any";
 
-        enter(start, end, destination, reason, defaultClock);
+        enter(new TravelExpenseForm(start, end, destination, reason), defaultClock);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class EntryTest {
         var destination = "any";
         var reason = "any";
 
-        assertThrows(TravelEndMustOccurAfterEnd.class, () -> enter(start, end, destination, reason, defaultClock));
+        assertThrows(TravelEndMustOccurAfterEnd.class, () -> enter(new TravelExpenseForm(start, end, destination, reason), defaultClock));
     }
 
     @Test
@@ -48,8 +48,8 @@ public class EntryTest {
         var destination = "any";
         var reason = "any";
 
-        enter(start, end, destination, reason, defaultClock);
-        assertThrows(OnlyOneSimultaneousTravelAllowed.class, () -> enter(start, end, destination, reason, defaultClock));
+        enter(new TravelExpenseForm(start, end, destination, reason), defaultClock);
+        assertThrows(OnlyOneSimultaneousTravelAllowed.class, () -> enter(new TravelExpenseForm(start, end, destination, reason), defaultClock));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class EntryTest {
         var reason = "any";
         SystemClock jan11Clock = () -> LocalDateTime.of(2022, Month.JANUARY, 11, 0, 0);
 
-        assertThrows(TravelExpenseIsTooLate.class, () -> enter(start, end, destination, reason, jan11Clock));
+        assertThrows(TravelExpenseIsTooLate.class, () -> enter(new TravelExpenseForm(start, end, destination, reason), jan11Clock));
     }
 
     @Test
@@ -73,10 +73,13 @@ public class EntryTest {
         var jan10Clock = mock(SystemClock.class);
         when(jan10Clock.now()).thenReturn(LocalDateTime.of(2022, Month.JANUARY, 10, 0, 0));
 
-        enter(start, end, destination, reason, jan10Clock);
+        enter(new TravelExpenseForm(start, end, destination, reason), jan10Clock);
     }
 
-    public void enter(LocalDateTime start, LocalDateTime end, String destination, String reason, SystemClock clock) throws TravelEndMustOccurAfterEnd, OnlyOneSimultaneousTravelAllowed, TravelExpenseIsTooLate {
-        accounting.enterTravel(start, end, clock);
+    public void enter(TravelExpenseForm form, SystemClock clock) throws TravelEndMustOccurAfterEnd, OnlyOneSimultaneousTravelAllowed, TravelExpenseIsTooLate {
+        accounting.enterTravel(form.start(), form.end(), clock);
+    }
+
+    public record TravelExpenseForm(LocalDateTime start, LocalDateTime end, String destination, String reason) {
     }
 }
