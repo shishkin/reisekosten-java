@@ -38,7 +38,7 @@ public class EntryTest {
         var destination = "any";
         var reason = "any";
 
-        assertThrows(TravelEndMustOccurBeforeStart.class, () -> enter(start, end, destination, reason, defaultClock));
+        assertThrows(TravelEndMustOccurAfterEnd.class, () -> enter(start, end, destination, reason, defaultClock));
     }
 
     @Test
@@ -76,28 +76,7 @@ public class EntryTest {
         enter(start, end, destination, reason, jan10Clock);
     }
 
-    public void enter(LocalDateTime start, LocalDateTime end, String destination, String reason, SystemClock clock) throws TravelEndMustOccurBeforeStart, OnlyOneSimultaneousTravelAllowed, TravelExpenseIsTooLate {
-        if (end.compareTo(start) < 0) {
-            throw new TravelEndMustOccurBeforeStart();
-        }
-
-        var now = clock.now();
-        if (end.getYear() == now.getYear() - 1
-                && now.getMonthValue() >= Month.JANUARY.getValue()
-                && now.getDayOfMonth() > 10) {
-            throw new TravelExpenseIsTooLate();
-        }
-
-        accounting.enterTravel(start, end);
-    }
-
-    @FunctionalInterface
-    interface SystemClock {
-        LocalDateTime now();
-
-        SystemClock Default = LocalDateTime::now;
-    }
-
-    public static class TravelExpenseIsTooLate extends Exception {
+    public void enter(LocalDateTime start, LocalDateTime end, String destination, String reason, SystemClock clock) throws TravelEndMustOccurAfterEnd, OnlyOneSimultaneousTravelAllowed, TravelExpenseIsTooLate {
+        accounting.enterTravel(start, end, clock);
     }
 }
