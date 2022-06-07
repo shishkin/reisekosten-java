@@ -11,19 +11,11 @@ public class Accounting implements Iterable<Travel> {
     final List<Travel> accounting = new ArrayList<>();
 
     public void enterTravel(TravelExpenseForm form, SystemClock clock) {
-        travelEndMustOccurAfterStart(form.start(), form.end());
         travelMustBeEnteredBeforeJan10FollowingYear(form.end(), clock);
         travelsMustNotOverlap(form.start(), form.end());
 
         accounting.add(new Travel(form));
     }
-
-    private void travelEndMustOccurAfterStart(LocalDateTime start, LocalDateTime end) {
-        if (end.compareTo(start) < 0) {
-            throw new TravelEndMustOccurAfterEnd();
-        }
-    }
-
 
     public void travelsMustNotOverlap(LocalDateTime start, LocalDateTime end) {
         if (accounting.stream().anyMatch((travel) -> travel.form().start().compareTo(start) <= 0 && travel.form().end().compareTo(end) >= 0)) {
