@@ -4,7 +4,6 @@ package domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -43,34 +42,11 @@ public class EntryTest {
 
     final Accounting accounting = new Accounting();
 
-    public record Travel(LocalDateTime start, LocalDateTime end) {
-    }
-
-    public static class Accounting extends ArrayList<Travel> {
-        public void enterTravel(LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
-            travelsMustNotOverlap(start, end);
-
-            this.add(new Travel(start, end));
-        }
-
-        public void travelsMustNotOverlap(LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
-            if (this.stream().anyMatch((travel) -> travel.start.compareTo(start) <= 0 && travel.end.compareTo(end) >= 0)) {
-                throw new OnlyOneSimultaneousTravelAllowed();
-            }
-        }
-    }
-
     public void enter(LocalDateTime start, LocalDateTime end, String destination, String reason) throws TravelEndMustOccurBeforeStart, OnlyOneSimultaneousTravelAllowed {
         if (end.compareTo(start) < 0) {
             throw new TravelEndMustOccurBeforeStart();
         }
 
         accounting.enterTravel(start, end);
-    }
-
-    public static class TravelEndMustOccurBeforeStart extends Exception {
-    }
-
-    public static class OnlyOneSimultaneousTravelAllowed extends Exception {
     }
 }
