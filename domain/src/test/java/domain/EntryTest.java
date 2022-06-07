@@ -47,6 +47,17 @@ public class EntryTest {
     }
 
     public static class Accounting extends ArrayList<Travel> {
+        public void enterTravel(LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
+            travelsMustNotOverlap(start, end);
+
+            this.add(new Travel(start, end));
+        }
+
+        public void travelsMustNotOverlap(LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
+            if (this.stream().anyMatch((travel) -> travel.start.compareTo(start) <= 0 && travel.end.compareTo(end) >= 0)) {
+                throw new OnlyOneSimultaneousTravelAllowed();
+            }
+        }
     }
 
     public void enter(LocalDateTime start, LocalDateTime end, String destination, String reason) throws TravelEndMustOccurBeforeStart, OnlyOneSimultaneousTravelAllowed {
@@ -54,19 +65,7 @@ public class EntryTest {
             throw new TravelEndMustOccurBeforeStart();
         }
 
-        enterInAccounting(accounting, start, end);
-    }
-
-    public void enterInAccounting(Accounting accounting, LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
-        travelsMustNotOverlap(accounting, start, end);
-
-        accounting.add(new Travel(start, end));
-    }
-
-    public void travelsMustNotOverlap(Accounting accounting, LocalDateTime start, LocalDateTime end) throws OnlyOneSimultaneousTravelAllowed {
-        if (accounting.stream().anyMatch((travel) -> travel.start.compareTo(start) <= 0 && travel.end.compareTo(end) >= 0)) {
-            throw new OnlyOneSimultaneousTravelAllowed();
-        }
+        accounting.enterTravel(start, end);
     }
 
     public static class TravelEndMustOccurBeforeStart extends Exception {
