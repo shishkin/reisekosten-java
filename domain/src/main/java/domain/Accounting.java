@@ -24,8 +24,8 @@ public class Accounting implements Iterable<Travel> {
     }
 
     public void travelMustBeEnteredBeforeJan10FollowingYear(LocalDateTime end, SystemClock clock) {
-        var now = clock.now();
-        if (end.getYear() == now.getYear() - 1 && now.getMonthValue() >= Month.JANUARY.getValue() && now.getDayOfMonth() > 10) {
+        var validUntil = LocalDateTime.of(end.plusYears(1).getYear(), Month.JANUARY, 10, 23, 59, 59);
+        if (clock.now().compareTo(validUntil) > 0) {
             throw new TravelExpenseIsTooLate();
         }
     }
