@@ -3,6 +3,9 @@ package domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -50,6 +53,24 @@ public class EntryTest {
 
         enter(new TravelExpenseForm(start, end, destination, reason), defaultClock);
         assertThrows(OnlyOneSimultaneousTravelAllowed.class, () -> enter(new TravelExpenseForm(start, end, destination, reason), defaultClock));
+    }
+
+    @ParameterizedTest
+    @CsvSource(useHeadersInDisplayName = true, textBlock = """
+            Start,               End,                 Now
+            2021-12-31T00:00:00, 2021-12-31T00:00:00, 2022-01-11T00:00:00
+            1900-01-01T00:00:00, 1900-01-01T00:00:00, 2022-01-11T00:00:00
+            1900-01-01T00:00:00, 1900-01-01T00:00:00, 2022-01-01T00:00:00
+            """)
+    void Should_reject_late_entered_travels(ArgumentsAccessor args) {
+        var start = args.get(0, LocalDateTime.class);
+        var end = args.get(1, LocalDateTime.class);
+        var now = args.get(2, LocalDateTime.class);
+        var destination = "any";
+        var reason = "any";
+        SystemClock clock = () -> now;
+
+        assertThrows(TravelExpenseIsTooLate.class, () -> enter(new TravelExpenseForm(start, end, destination, reason), clock));
     }
 
     @Test
