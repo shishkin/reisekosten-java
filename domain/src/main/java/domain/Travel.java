@@ -2,7 +2,10 @@ package domain;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -16,15 +19,37 @@ public record Travel(TravelExpenseForm form) {
     );
 
     BigDecimal allowance() {
-        for (var entry : durationAllowances) {
-            if (entry.getKey().test(duration())) {
-                return entry.getValue();
+        var total = BigDecimal.valueOf(0);
+        for (var day : days(form)) {
+            for (var entry : durationAllowances) {
+                if (entry.getKey().test(day.duration())) {
+                    total = total.add(entry.getValue());
+                    break;
+                }
             }
         }
-        return BigDecimal.valueOf(0);
+        return total;
     }
 
-    Duration duration() {
-        return Duration.between(form.start(), form.end());
+    private Iterable<Day> days(TravelExpenseForm form) {
+        List<Day> days = new ArrayList<>();
+        var startOfDay = form.start();
+        do {
+            var endOfDay = startOfDay.plusDays(1).truncatedTo(ChronoUnit.DAYS);
+
+            if (endOfDay.isAfter(form.end())) {
+                endOfDay = form.end();
+            }
+
+            days.add(new Day(startOfDay, endOfDay));
+            startOfDay = endOfDay;
+        } while (startOfDay.isBefore(form.end()));
+        return days;
+    }
+
+    record Day(LocalDateTime start, LocalDateTime end) {
+        Duration duration() {
+            return Duration.between(start, end);
+        }
     }
 }

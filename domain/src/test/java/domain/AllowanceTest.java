@@ -61,4 +61,21 @@ public class AllowanceTest {
                 .map(Travel::allowance))
                 .contains(BigDecimal.valueOf(24));
     }
+
+    @Test
+    void Should_calculate_allowance_for_multi_day_travel() {
+        var start = LocalDateTime.of(2022, 1, 1, 16, 0);
+        var end = LocalDateTime.of(2022, 1, 3, 14, 0);
+        var destination = "any";
+        var reason = "any";
+        var form = new TravelExpenseForm(start, end, destination, reason);
+
+        var accounting = new Accounting();
+        accounting.enterTravel(form, defaultClock);
+
+        assertThat(accounting.stream()
+                .findFirst()
+                .map(Travel::allowance))
+                .contains(BigDecimal.valueOf(6 + 24 + 12));
+    }
 }
