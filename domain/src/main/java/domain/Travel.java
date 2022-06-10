@@ -24,12 +24,13 @@ public record Travel(TravelExpenseForm form) {
                 .reduce(
                         BigDecimal.valueOf(0),
                         (total, day) -> {
-                            for (var entry : durationAllowances) {
-                                if (entry.getKey().test(day.duration())) {
-                                    return total.add(entry.getValue());
-                                }
-                            }
-                            return BigDecimal.valueOf(0);
+                            var allowance = durationAllowances
+                                    .stream()
+                                    .filter(e -> e.getKey().test(day.duration()))
+                                    .findFirst()
+                                    .map(Entry::getValue)
+                                    .orElse(BigDecimal.valueOf(0));
+                            return total.add(allowance);
                         },
                         BigDecimal::add);
     }
