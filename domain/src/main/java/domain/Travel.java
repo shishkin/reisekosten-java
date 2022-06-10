@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 public record Travel(TravelExpenseForm form) {
 
@@ -19,16 +20,18 @@ public record Travel(TravelExpenseForm form) {
     );
 
     BigDecimal allowance() {
-        var total = BigDecimal.valueOf(0);
-        for (var day : days(form)) {
-            for (var entry : durationAllowances) {
-                if (entry.getKey().test(day.duration())) {
-                    total = total.add(entry.getValue());
-                    break;
-                }
-            }
-        }
-        return total;
+        return StreamSupport.stream(days(form).spliterator(), false)
+                .reduce(
+                        BigDecimal.valueOf(0),
+                        (total, day) -> {
+                            for (var entry : durationAllowances) {
+                                if (entry.getKey().test(day.duration())) {
+                                    return total.add(entry.getValue());
+                                }
+                            }
+                            return BigDecimal.valueOf(0);
+                        },
+                        BigDecimal::add);
     }
 
     private Iterable<Day> days(TravelExpenseForm form) {
