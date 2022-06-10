@@ -5,6 +5,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Accounting implements Iterable<Travel> {
 
@@ -33,5 +34,9 @@ public class Accounting implements Iterable<Travel> {
     @Override
     public Iterator<Travel> iterator() {
         return accounting.iterator();
+    }
+
+    public Stream<Travel> stream() {
+        return accounting.stream();
     }
 }

@@ -13,3 +13,12 @@ so that I get my travel expenses reimbursed.
 
 Travels can only be entered until January 10th of the following year,
 so that accounting can close financial year reporting.
+
+## Allowance
+
+As an accountant I want the system to calculate travel allowance
+in the end of the month, so that employees get their travel expenses
+reimbursed.
+
+* For each day of travel traveler receives 6 € starting from 
+  8 hours of travel, 12 € from 12 hours and 24 € from 24 hours.
