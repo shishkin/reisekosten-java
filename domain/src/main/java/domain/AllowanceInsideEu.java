@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class AllowanceInsideEu {
+public class AllowanceInsideEu implements AllowanceStrategy {
     static final List<Map.Entry<Predicate<Duration>, BigDecimal>> durationAllowances = List.of(
             new AbstractMap.SimpleEntry<>(d -> d.compareTo(Duration.ofHours(24)) >= 0, BigDecimal.valueOf(24)),
             new AbstractMap.SimpleEntry<>(d -> d.compareTo(Duration.ofHours(12)) >= 0, BigDecimal.valueOf(12)),
             new AbstractMap.SimpleEntry<>(d -> d.compareTo(Duration.ofHours(8)) >= 0, BigDecimal.valueOf(6))
     );
 
-    static BigDecimal calculate(Collection<Day> days) {
+    public BigDecimal calculate(Collection<Day> days) {
         return days.stream().reduce(
                 BigDecimal.valueOf(0),
                 (total, day) -> {
@@ -28,6 +28,5 @@ public class AllowanceInsideEu {
                     return total.add(allowance);
                 },
                 BigDecimal::add);
-
     }
 }

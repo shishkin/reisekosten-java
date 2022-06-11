@@ -9,7 +9,9 @@ import java.util.List;
 public record Travel(TravelExpenseForm form) {
 
     BigDecimal allowance(TranslateCitiesToEuCountries geo) {
-        return AllowanceInsideEu.calculate(days());
+        return new AllowanceStrategyFactory()
+                .resolve(geo, form().destination())
+                .calculate(days());
     }
 
     private Collection<Day> days() {
