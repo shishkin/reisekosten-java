@@ -13,7 +13,19 @@ import java.util.stream.Stream;
 
 public class Accounting {
 
-    final List<Travel> travels = new ArrayList<>();
+    Integer id = 0;
+
+    List<Travel> travels = new ArrayList<>();
+
+    public Accounting withId(Integer id) {
+        this.id = id;
+        return this;
+    }
+
+    public Accounting withTravels(List<Travel> travels) {
+        this.travels = travels;
+        return this;
+    }
 
     public void enterTravel(TravelExpenseForm form, SystemClock clock) {
         travelMustBeEnteredBeforeJan10FollowingYear(form.end(), clock);
