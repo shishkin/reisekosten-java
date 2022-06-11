@@ -1,12 +1,12 @@
-package domain;
+package domain.entities;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
 
-record Report(Collection<TravelAllowance> allowances) implements Iterable<TravelAllowance> {
+public record Report(Collection<TravelAllowance> allowances) implements Iterable<TravelAllowance> {
 
-    BigDecimal totalAllowance() {
+    public BigDecimal totalAllowance() {
         return allowances
                 .stream()
                 .map(TravelAllowance::allowance)

@@ -1,4 +1,6 @@
-package domain;
+package domain.entities;
+
+import domain.errors.TravelEndMustOccurAfterEnd;
 
 import java.time.LocalDateTime;
 

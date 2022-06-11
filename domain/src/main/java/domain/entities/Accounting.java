@@ -1,4 +1,9 @@
-package domain;
+package domain.entities;
+
+import domain.errors.OnlyOneSimultaneousTravelAllowed;
+import domain.errors.TravelExpenseIsTooLate;
+import domain.services.SystemClock;
+import domain.services.TranslateCitiesToEuCountries;
 
 import java.time.LocalDateTime;
 import java.time.Month;

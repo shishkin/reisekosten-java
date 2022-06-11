@@ -1,9 +1,9 @@
-package domain;
+package domain.services;
 
 import java.time.LocalDateTime;
 
 @FunctionalInterface
-interface SystemClock {
+public interface SystemClock {
     LocalDateTime now();
 
     SystemClock Default = LocalDateTime::now;

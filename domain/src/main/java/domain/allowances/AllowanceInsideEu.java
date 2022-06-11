@@ -1,4 +1,6 @@
-package domain;
+package domain.allowances;
+
+import domain.entities.Day;
 
 import java.math.BigDecimal;
 import java.time.Duration;

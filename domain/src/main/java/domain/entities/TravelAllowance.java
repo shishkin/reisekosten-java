@@ -1,9 +1,9 @@
-package domain;
+package domain.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-record TravelAllowance(
+public record TravelAllowance(
         LocalDateTime start,
         LocalDateTime end,
         String destination,

@@ -1,4 +1,4 @@
-package domain;
+package domain.errors;
 
 public class TravelEndMustOccurAfterEnd extends RuntimeException {
 }

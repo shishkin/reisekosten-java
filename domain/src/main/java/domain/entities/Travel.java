@@ -1,4 +1,7 @@
-package domain;
+package domain.entities;
+
+import domain.allowances.AllowanceStrategyFactory;
+import domain.services.TranslateCitiesToEuCountries;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
@@ -8,7 +11,7 @@ import java.util.List;
 
 public record Travel(TravelExpenseForm form) {
 
-    BigDecimal allowance(TranslateCitiesToEuCountries geo) {
+    public BigDecimal allowance(TranslateCitiesToEuCountries geo) {
         return new AllowanceStrategyFactory()
                 .resolve(geo, form().destination())
                 .calculate(days());
