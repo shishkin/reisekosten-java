@@ -3,23 +3,22 @@ package domain;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Accounting implements Iterable<Travel> {
+public class Accounting {
 
-    final List<Travel> accounting = new ArrayList<>();
+    final List<Travel> travels = new ArrayList<>();
 
     public void enterTravel(TravelExpenseForm form, SystemClock clock) {
         travelMustBeEnteredBeforeJan10FollowingYear(form.end(), clock);
         travelsMustNotOverlap(form.start(), form.end());
 
-        accounting.add(new Travel(form));
+        travels.add(new Travel(form));
     }
 
     public void travelsMustNotOverlap(LocalDateTime start, LocalDateTime end) {
-        if (accounting.stream().anyMatch((travel) -> travel.form().start().compareTo(start) <= 0 && travel.form().end().compareTo(end) >= 0)) {
+        if (travels.stream().anyMatch((travel) -> travel.form().start().compareTo(start) <= 0 && travel.form().end().compareTo(end) >= 0)) {
             throw new OnlyOneSimultaneousTravelAllowed();
         }
     }
@@ -31,13 +30,8 @@ public class Accounting implements Iterable<Travel> {
         }
     }
 
-    @Override
-    public Iterator<Travel> iterator() {
-        return accounting.iterator();
-    }
-
     public Stream<Travel> stream() {
-        return accounting.stream();
+        return travels.stream();
     }
 
     public Report report(TranslateCitiesToEuCountries geo) {
