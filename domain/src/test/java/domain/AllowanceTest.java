@@ -22,10 +22,9 @@ public class AllowanceTest {
         var accounting = new Accounting();
         accounting.enterTravel(form, defaultClock);
 
-        assertThat(accounting.stream()
-                .findFirst()
-                .map(Travel::allowance))
-                .contains(BigDecimal.ZERO);
+        var report = calculate(accounting);
+        assertThat(report.totalAllowance())
+                .isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     @Test
@@ -39,10 +38,9 @@ public class AllowanceTest {
         var accounting = new Accounting();
         accounting.enterTravel(form, defaultClock);
 
-        assertThat(accounting.stream()
-                .findFirst()
-                .map(Travel::allowance))
-                .contains(BigDecimal.valueOf(12));
+        var report = calculate(accounting);
+        assertThat(report.totalAllowance())
+                .isEqualByComparingTo(BigDecimal.valueOf(12));
     }
 
     @Test
@@ -56,10 +54,9 @@ public class AllowanceTest {
         var accounting = new Accounting();
         accounting.enterTravel(form, defaultClock);
 
-        assertThat(accounting.stream()
-                .findFirst()
-                .map(Travel::allowance))
-                .contains(BigDecimal.valueOf(24));
+        var report = calculate(accounting);
+        assertThat(report.totalAllowance())
+                .isEqualByComparingTo(BigDecimal.valueOf(24));
     }
 
     @Test
@@ -73,9 +70,12 @@ public class AllowanceTest {
         var accounting = new Accounting();
         accounting.enterTravel(form, defaultClock);
 
-        assertThat(accounting.stream()
-                .findFirst()
-                .map(Travel::allowance))
-                .contains(BigDecimal.valueOf(6 + 24 + 12));
+        var report = calculate(accounting);
+        assertThat(report.totalAllowance())
+                .isEqualByComparingTo(BigDecimal.valueOf(6 + 24 + 12));
+    }
+
+    static Report calculate(Accounting accounting) {
+        return accounting.report();
     }
 }

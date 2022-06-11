@@ -22,3 +22,6 @@ reimbursed.
 
 * For each day of travel traveler receives 6 € starting from 
   8 hours of travel, 12 € from 12 hours and 24 € from 24 hours.
+* Account receives tabular report containing:
+  * Travels (start, destination, reason) with calculated allowance
+  * Total allowance sum
