@@ -40,14 +40,14 @@ public class Accounting implements Iterable<Travel> {
         return accounting.stream();
     }
 
-    public Report report() {
+    public Report report(TranslateCitiesToEuCountries geo) {
         var allowances = stream()
                 .map(travel -> new TravelAllowance(
                         travel.form().start(),
                         travel.form().end(),
                         travel.form().destination(),
                         travel.form().reason(),
-                        travel.allowance()))
+                        travel.allowance(geo)))
                 .toList();
         return new Report(allowances);
     }

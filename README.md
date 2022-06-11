@@ -25,3 +25,7 @@ reimbursed.
 * Account receives tabular report containing:
   * Travels (start, destination, reason) with calculated allowance
   * Total allowance sum
+
+## Special accounting for travels outside of EU
+
+Allowance for travels outside of EU is 100 € per day

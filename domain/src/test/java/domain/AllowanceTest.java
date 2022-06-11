@@ -11,9 +11,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith({SnapshotExtension.class})
-public class AllowanceTest {
-
-    SystemClock defaultClock = () -> LocalDateTime.MIN;
+public class AllowanceTest implements TranslateCitiesToEuCountries, SystemClock {
 
     @Test
     void Should_give_no_allowance_for_travel_under_8_hours() {
@@ -24,9 +22,9 @@ public class AllowanceTest {
         var form = new TravelExpenseForm(start, end, destination, reason);
 
         var accounting = new Accounting();
-        accounting.enterTravel(form, defaultClock);
+        accounting.enterTravel(form, this);
 
-        var report = calculate(accounting);
+        var report = calculate(accounting, this);
         assertThat(report.totalAllowance())
                 .isEqualByComparingTo(BigDecimal.ZERO);
     }
@@ -40,9 +38,9 @@ public class AllowanceTest {
         var form = new TravelExpenseForm(start, end, destination, reason);
 
         var accounting = new Accounting();
-        accounting.enterTravel(form, defaultClock);
+        accounting.enterTravel(form, this);
 
-        var report = calculate(accounting);
+        var report = calculate(accounting, this);
         assertThat(report.totalAllowance())
                 .isEqualByComparingTo(BigDecimal.valueOf(12));
     }
@@ -56,9 +54,9 @@ public class AllowanceTest {
         var form = new TravelExpenseForm(start, end, destination, reason);
 
         var accounting = new Accounting();
-        accounting.enterTravel(form, defaultClock);
+        accounting.enterTravel(form, this);
 
-        var report = calculate(accounting);
+        var report = calculate(accounting, this);
         assertThat(report.totalAllowance())
                 .isEqualByComparingTo(BigDecimal.valueOf(24));
     }
@@ -72,15 +70,15 @@ public class AllowanceTest {
         var form = new TravelExpenseForm(start, end, destination, reason);
 
         var accounting = new Accounting();
-        accounting.enterTravel(form, defaultClock);
+        accounting.enterTravel(form, this);
 
-        var report = calculate(accounting);
+        var report = calculate(accounting, this);
         assertThat(report.totalAllowance())
                 .isEqualByComparingTo(BigDecimal.valueOf(6 + 24 + 12));
     }
 
     @Test
-    public void Should_include_travel_details_in_report(Expect expect) {
+    void Should_include_travel_details_in_report(Expect expect) {
         var travel1 = new TravelExpenseForm(
                 LocalDateTime.MIN,
                 LocalDateTime.MIN.plusDays(1),
@@ -93,10 +91,10 @@ public class AllowanceTest {
                 "Developer Open Space");
 
         var accounting = new Accounting();
-        accounting.enterTravel(travel1, defaultClock);
-        accounting.enterTravel(travel2, defaultClock);
+        accounting.enterTravel(travel1, this);
+        accounting.enterTravel(travel2, this);
 
-        var report = calculate(accounting);
+        var report = calculate(accounting, this);
 
         assertThat(report).hasSize(2);
         assertThat(report
@@ -117,7 +115,35 @@ public class AllowanceTest {
                 .toMatchSnapshot(report);
     }
 
-    static Report calculate(Accounting accounting) {
-        return accounting.report();
+    @Test
+    void Should_calculate_allowance_of_100_EUR_for_travel_outside_EU() {
+        var start = LocalDateTime.MIN;
+        var end = start;
+        var destination = "any";
+        var reason = "any";
+        var form = new TravelExpenseForm(start, end, destination, reason);
+
+        var accounting = new Accounting();
+        accounting.enterTravel(form, this);
+
+        TranslateCitiesToEuCountries geo = city -> true;
+
+        var report = calculate(accounting, geo);
+
+        assertThat(report.totalAllowance()).isEqualByComparingTo(BigDecimal.valueOf(100));
+    }
+
+    static Report calculate(Accounting accounting, TranslateCitiesToEuCountries geo) {
+        return accounting.report(geo);
+    }
+
+    @Override
+    public boolean isOutsideOfEu(String city) {
+        return false;
+    }
+
+    @Override
+    public LocalDateTime now() {
+        return LocalDateTime.MIN;
     }
 }
