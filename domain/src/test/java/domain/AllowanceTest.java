@@ -1,12 +1,16 @@
 package domain;
 
+import au.com.origin.snapshots.Expect;
+import au.com.origin.snapshots.junit5.SnapshotExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith({SnapshotExtension.class})
 public class AllowanceTest {
 
     SystemClock defaultClock = () -> LocalDateTime.MIN;
@@ -73,6 +77,44 @@ public class AllowanceTest {
         var report = calculate(accounting);
         assertThat(report.totalAllowance())
                 .isEqualByComparingTo(BigDecimal.valueOf(6 + 24 + 12));
+    }
+
+    @Test
+    public void Should_include_travel_details_in_report(Expect expect) {
+        var travel1 = new TravelExpenseForm(
+                LocalDateTime.MIN,
+                LocalDateTime.MIN.plusDays(1),
+                "Berlin",
+                "Republica");
+        var travel2 = new TravelExpenseForm(
+                LocalDateTime.MIN.plusDays(1),
+                LocalDateTime.MIN.plusDays(2),
+                "Leipzig",
+                "Developer Open Space");
+
+        var accounting = new Accounting();
+        accounting.enterTravel(travel1, defaultClock);
+        accounting.enterTravel(travel2, defaultClock);
+
+        var report = calculate(accounting);
+
+        assertThat(report).hasSize(2);
+        assertThat(report
+                .allowances()
+                .stream()
+                .findFirst()
+                .map(TravelAllowance::destination)
+        ).contains("Berlin");
+        assertThat(report
+                .allowances()
+                .stream()
+                .findFirst()
+                .map(TravelAllowance::reason)
+        ).contains("Republica");
+
+        expect
+                .serializer("json")
+                .toMatchSnapshot(report);
     }
 
     static Report calculate(Accounting accounting) {

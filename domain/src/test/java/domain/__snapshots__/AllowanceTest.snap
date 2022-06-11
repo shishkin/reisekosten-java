@@ -1,0 +1,20 @@
+domain.AllowanceTest.Should_include_travel_details_in_report=[
+  {
+    "allowances": [
+      {
+        "start": "-999999999-01-01T00:00:00",
+        "end": "-999999999-01-02T00:00:00",
+        "destination": "Berlin",
+        "reason": "Republica",
+        "allowance": 24
+      },
+      {
+        "start": "-999999999-01-02T00:00:00",
+        "end": "-999999999-01-03T00:00:00",
+        "destination": "Leipzig",
+        "reason": "Developer Open Space",
+        "allowance": 24
+      }
+    ]
+  }
+]
