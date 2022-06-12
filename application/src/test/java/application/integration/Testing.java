@@ -15,6 +15,13 @@ public class Testing {
     @Autowired
     ReactiveMongoTemplate db;
 
+    @Autowired
+    MongoAccountingRepository repository;
+
+    public void setAccountingIdForTesting(int id){
+        repository.setAccountingIdForTesting(id);
+    }
+
     public <Response> Response sendAsync(Command<Response> request) {
         return pipeline.send(request);
     }

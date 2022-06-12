@@ -10,6 +10,8 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Component
 public class TravelDsl {
@@ -29,6 +31,12 @@ public class TravelDsl {
     }
 
     private LocalDateTime toDateTime(String str) {
+        var format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        try {
+            return LocalDateTime.parse(str, format);
+        } catch (DateTimeParseException ignored) {
+        }
+
         var parts = str.split(" ");
         var date = switch (parts[0]) {
             case "today" -> LocalDate.now();

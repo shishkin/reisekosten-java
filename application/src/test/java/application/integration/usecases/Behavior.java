@@ -8,4 +8,7 @@ public class Behavior {
 
     @Autowired
     ReportDsl report;
+
+    @Autowired
+    AccountingDsl accounting;
 }
