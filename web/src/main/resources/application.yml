@@ -1,0 +1,6 @@
+spring:
+  resources:
+    static-locations:
+      - file:reisekosten-web-client/dist
+      - classpath:/public
+      - classpath:/static
