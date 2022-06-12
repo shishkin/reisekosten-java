@@ -18,6 +18,7 @@
     <modules>
         <module>domain</module>
         <module>application</module>
+        <module>web</module>
     </modules>
 
     <properties>
@@ -96,6 +97,11 @@
                 <groupId>net.sizovs</groupId>
                 <artifactId>pipelinr</artifactId>
                 <version>0.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-webflux-ui</artifactId>
+                <version>1.6.9</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
