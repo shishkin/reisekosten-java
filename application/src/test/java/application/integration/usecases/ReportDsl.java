@@ -20,7 +20,7 @@ public class ReportDsl {
         var query = new CreateReportQuery();
 
         return testing.sendAsync(query)
-                .doOnNext(report -> assertThat(report).hasSize(number))
+                .doOnNext(report -> assertThat(report.travels()).hasSize(number))
                 .then();
     }
 
