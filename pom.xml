@@ -104,6 +104,11 @@
                 <artifactId>springdoc-openapi-webflux-ui</artifactId>
                 <version>1.6.9</version>
             </dependency>
+            <dependency>
+                <groupId>au.com.dius.pact.provider</groupId>
+                <artifactId>junit5spring</artifactId>
+                <version>4.3.9</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
