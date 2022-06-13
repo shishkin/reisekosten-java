@@ -19,7 +19,11 @@ public class EntryCommandHandler implements Command.Handler<EntryCommand, Mono<V
 
     @Override
     public Mono<Void> handle(EntryCommand request) {
-        var form = new TravelExpenseForm(request.start(), request.end(), request.destination(), request.reason());
+        var form = new TravelExpenseForm(
+                request.start(),
+                request.end(),
+                request.destination(),
+                request.reason());
 
         return db.loadAccounting()
                 .doOnNext(acc -> acc.enterTravel(form, clock))
