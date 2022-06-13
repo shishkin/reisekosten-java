@@ -106,7 +106,7 @@
                 <configuration>
                     <installDirectory>target</installDirectory>
                     <workingDirectory>reisekosten-web-client</workingDirectory>
-                    <nodeVersion>v14.19.1</nodeVersion>
+                    <nodeVersion>v16.14.2</nodeVersion>
                     <yarnVersion>v1.22.18</yarnVersion>
                 </configuration>
                 <executions>
