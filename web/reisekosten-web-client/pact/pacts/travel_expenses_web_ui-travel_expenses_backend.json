@@ -1,0 +1,138 @@
+{
+  "consumer": {
+    "name": "Travel Expenses Web UI"
+  },
+  "provider": {
+    "name": "Travel Expenses Backend"
+  },
+  "interactions": [
+    {
+      "description": "Travel expense claim with data",
+      "providerState": "Accounting without claims",
+      "request": {
+        "method": "POST",
+        "path": "/submit",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "start": "2015-08-06T16:53:10.123+01:00",
+          "end": "2015-08-06T16:53:10.123+01:00",
+          "destination": "Destination",
+          "reason": "Reason"
+        },
+        "matchingRules": {
+          "$.body.start": {
+            "match": "regex",
+            "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d(:?[0-5]\\d)?|Z)$"
+          },
+          "$.body.end": {
+            "match": "regex",
+            "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d(:?[0-5]\\d)?|Z)$"
+          },
+          "$.body.destination": {
+            "match": "type"
+          },
+          "$.body.reason": {
+            "match": "type"
+          }
+        }
+      },
+      "response": {
+        "status": 202,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "Report request",
+      "providerState": "Accounting without claims",
+      "request": {
+        "method": "GET",
+        "path": "/report",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "totalSum": 0,
+          "travels": [
+
+          ]
+        }
+      }
+    },
+    {
+      "description": "Report request",
+      "providerState": "Accounting with 2 claims",
+      "request": {
+        "method": "GET",
+        "path": "/report",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "totalSum": 18,
+          "travels": [
+            {
+              "start": "2015-08-06T16:53:10+01:00",
+              "reason": "Reason 1",
+              "destination": "Destination 1",
+              "allowance": 6
+            },
+            {
+              "start": "2015-08-06T16:53:10+01:00",
+              "reason": "Reason 2",
+              "destination": "Destination 2",
+              "allowance": 12
+            }
+          ]
+        },
+        "matchingRules": {
+          "$.body.totalSum": {
+            "match": "type"
+          },
+          "$.body.travels": {
+            "match": "type"
+          },
+          "$.body.travels[0].start": {
+            "match": "regex",
+            "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
+          },
+          "$.body.travels[0].reason": {
+            "match": "type"
+          },
+          "$.body.travels[0].destination": {
+            "match": "type"
+          },
+          "$.body.travels[1].start": {
+            "match": "regex",
+            "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
+          },
+          "$.body.travels[1].reason": {
+            "match": "type"
+          },
+          "$.body.travels[1].destination": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
