@@ -28,7 +28,7 @@ public class CreateReportTest {
         var report = handler.handle(query).block();
 
         assert report != null;
-        assertThat(report.totalAllowance())
+        assertThat(report.totalSum())
                 .isEqualByComparingTo(BigDecimal.ZERO);
     }
 }

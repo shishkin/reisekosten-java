@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -30,10 +28,10 @@ public class TravelDsl {
                 .then(testing.sendAsync(command));
     }
 
-    private LocalDateTime toDateTime(String str) {
+    private ZonedDateTime toDateTime(String str) {
         var format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         try {
-            return LocalDateTime.parse(str, format);
+            return LocalDateTime.parse(str, format).atZone(ZoneOffset.UTC);
         } catch (DateTimeParseException ignored) {
         }
 
@@ -44,6 +42,6 @@ public class TravelDsl {
             default -> throw new IllegalArgumentException();
         };
         var time = LocalTime.parse(parts[1]);
-        return date.atTime(time);
+        return date.atTime(time).atZone(ZoneOffset.UTC);
     }
 }

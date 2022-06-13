@@ -20,8 +20,8 @@ public class EntryCommandHandler implements Command.Handler<EntryCommand, Mono<V
     @Override
     public Mono<Void> handle(EntryCommand request) {
         var form = new TravelExpenseForm(
-                request.start(),
-                request.end(),
+                request.start().toLocalDateTime(),
+                request.end().toLocalDateTime(),
                 request.destination(),
                 request.reason());
 

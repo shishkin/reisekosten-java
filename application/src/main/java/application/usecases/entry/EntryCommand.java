@@ -3,11 +3,11 @@ package application.usecases.entry;
 import an.awesome.pipelinr.Command;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public record EntryCommand(
-        LocalDateTime start,
-        LocalDateTime end,
+        ZonedDateTime start,
+        ZonedDateTime end,
         String destination,
         String reason) implements Command<Mono<Void>> {
 }

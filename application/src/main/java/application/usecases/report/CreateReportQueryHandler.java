@@ -6,6 +6,8 @@ import domain.services.TranslateCitiesToEuCountries;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.ZoneOffset;
+
 @Service
 public class CreateReportQueryHandler implements Command.Handler<CreateReportQuery, Mono<ReportViewModel>> {
     private final AccountingRepository db;
@@ -24,8 +26,8 @@ public class CreateReportQueryHandler implements Command.Handler<CreateReportQue
                         report.totalAllowance(),
                         report.allowances().stream()
                                 .map(a -> new TravelViewModel(
-                                        a.start(),
-                                        a.end(),
+                                        a.start().atZone(ZoneOffset.UTC),
+                                        a.end().atZone(ZoneOffset.UTC),
                                         a.reason(),
                                         a.destination(),
                                         a.allowance()))

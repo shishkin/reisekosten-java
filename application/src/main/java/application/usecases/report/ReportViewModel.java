@@ -4,6 +4,6 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 public record ReportViewModel(
-        BigDecimal totalAllowance,
+        BigDecimal totalSum,
         Collection<TravelViewModel> travels) {
 }

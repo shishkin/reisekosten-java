@@ -29,7 +29,7 @@ public class ReportDsl {
 
         return testing.sendAsync(query)
                 .doOnNext(report ->
-                        assertThat(report.totalAllowance())
+                        assertThat(report.totalSum())
                                 .isEqualByComparingTo(sum))
                 .then();
     }

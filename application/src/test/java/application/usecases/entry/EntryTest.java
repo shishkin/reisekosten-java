@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -19,8 +21,8 @@ public class EntryTest {
     @Test
     void Should_enter_travel_expense(@Mock SystemClock clock, @Mock AccountingRepository db) {
         var command = new EntryCommand(
-                LocalDateTime.MIN,
-                LocalDateTime.MIN,
+                LocalDate.EPOCH.atStartOfDay().atZone(ZoneOffset.UTC),
+                LocalDate.EPOCH.atStartOfDay().atZone(ZoneOffset.UTC),
                 "destination",
                 "reason");
         when(db.loadAccounting()).thenReturn(Mono.just(new Accounting()));
