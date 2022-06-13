@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Accounting {
+public record Accounting(
+        Integer id,
+        List<Travel> travels) {
 
-    Integer id = 0;
-
-    List<Travel> travels = new ArrayList<>();
+    public Accounting() {
+        this(0, new ArrayList<>());
+    }
 
     public Accounting withId(Integer id) {
-        this.id = id;
-        return this;
+        return new Accounting(id, this.travels);
     }
 
     public Accounting withTravels(List<Travel> travels) {
-        this.travels = travels;
-        return this;
+        return new Accounting(this.id, travels);
     }
 
     public void enterTravel(TravelExpenseForm form, SystemClock clock) {

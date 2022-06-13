@@ -11,12 +11,12 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.Map;
 
 @Configuration
-public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
+public class TestMongoConfiguration extends AbstractReactiveMongoConfiguration {
     final MongoDBContainer mongo =
             new MongoDBContainer(DockerImageName.parse("mongo:5.0.9"))
                     .withTmpFs(Map.of("/data/db", "rw"));
 
-    public MongoConfiguration() {
+    public TestMongoConfiguration() {
     }
 
     @Override

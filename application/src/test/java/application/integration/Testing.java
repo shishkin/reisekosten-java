@@ -16,7 +16,7 @@ public class Testing {
     ReactiveMongoTemplate db;
 
     @Autowired
-    MongoAccountingRepository repository;
+    TestMongoAccountingRepository repository;
 
     public void setAccountingIdForTesting(int id){
         repository.setAccountingIdForTesting(id);

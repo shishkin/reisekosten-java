@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
-public class MongoAccountingRepository implements AccountingRepository {
+public class TestMongoAccountingRepository implements AccountingRepository {
 
     int id;
 
     final ReactiveMongoTemplate template;
 
-    public MongoAccountingRepository(ReactiveMongoTemplate template) {
+    public TestMongoAccountingRepository(ReactiveMongoTemplate template) {
         this.template = template;
     }
 
