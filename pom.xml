@@ -20,6 +20,7 @@
         <module>application</module>
         <module>web</module>
         <module>infrastructure</module>
+        <module>acceptance</module>
     </modules>
 
     <properties>
@@ -108,6 +109,13 @@
                 <groupId>au.com.dius.pact.provider</groupId>
                 <artifactId>junit5spring</artifactId>
                 <version>4.3.9</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-bom</artifactId>
+                <version>7.3.4</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

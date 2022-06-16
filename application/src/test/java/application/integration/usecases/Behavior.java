@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class Behavior {
     @Autowired
-    TravelDsl travel;
+    public TravelDsl travel;
 
     @Autowired
-    ReportDsl report;
+    public ReportDsl report;
 
     @Autowired
-    AccountingDsl accounting;
+    public AccountingDsl accounting;
 }
